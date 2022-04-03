@@ -14,16 +14,14 @@ namespace Lesson1.Pages
     {
         private static readonly string[] Summaries = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Hild", "Warm", "Balmy", "Hot", "Sweltering", "Scoring"
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy",
+            "Hot", "Sweltering", "Scorching"
         };
-
         private readonly ILogger<WeatherForecastController> _logger;
-
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
         }
-
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
@@ -36,7 +34,5 @@ namespace Lesson1.Pages
             })
             .ToArray();
         }
-
-
     }
 }
