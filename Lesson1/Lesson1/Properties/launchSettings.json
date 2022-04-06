@@ -1,9 +1,12 @@
 ﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+  },
   "profiles": {
     "Lesson1": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
