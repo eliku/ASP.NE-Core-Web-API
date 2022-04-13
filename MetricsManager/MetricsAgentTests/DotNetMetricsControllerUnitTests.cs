@@ -1,5 +1,6 @@
 ﻿using MetricsAgent.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using Xunit;
 
@@ -8,9 +9,10 @@ namespace MetricsManagerTests
     public class DotNetMetricsControllerUnitTests
     {
         private DotNetMetricsController controller;
+        private readonly ILogger<DotNetMetricsController> logger;
         public DotNetMetricsControllerUnitTests()
         {
-            controller = new DotNetMetricsController();
+            controller = new DotNetMetricsController(logger);
         }
         [Fact]
         public void GetMetrics_ReturnsOk()
