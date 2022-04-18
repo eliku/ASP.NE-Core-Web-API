@@ -3,29 +3,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using Xunit;
+using MetricsAgent.DAL.Models;
+using MetricsAgent.DAL.Repository;
+using Moq;
 
 namespace MetricsManagerTests
 {
     public class RamMetricsControllerUnitTests
     {
         private RamMetricsController controller;
-        private readonly ILogger<RamMetricsController> logger;
+        private Mock<IRamMetricsRepository> mock;
 
         public RamMetricsControllerUnitTests()
         {
-            controller = new RamMetricsController(logger);
+            controller = new RamMetricsController(new Mock<ILogger<RamMetricsController>>().Object, mock.Object);
         }
+
         [Fact]
-        public void GetMetrics_ReturnsOk()
+        public void Create_ShouldCall_Create_From_Repository()
         {
-            //Arrange
-            var agentId = 1;
-            var fromTime = TimeSpan.FromSeconds(50);
-            var toTime = TimeSpan.FromSeconds(200);
-            //Act
-            var result = controller.GetMetrics(fromTime, toTime);
-            // Assert
-            _ = Assert.IsAssignableFrom<IActionResult>(result);
+            // Устанавливаем параметр заглушки
+            // В заглушке прописываем, что в репозиторий прилетит CpuMetric - объект
+            mock.Setup(repository => repository.Create(It.IsAny<RamMetric>())).Verifiable();
+            // Выполняем действие на контроллере
+            var result = controller.Create(new
+            MetricsAgent.DAL.Request.RamMetricCreateRequest
+            {
+                Time = TimeSpan.FromHours(10),
+                Value = 5
+            });
+            // Проверяем заглушку на то, что пока работал контроллер
+            // Вызвался метод Create репозитория с нужным типом объекта в параметре
+            mock.Verify(repository => repository.Create(It.IsAny<RamMetric>()), Times.AtMostOnce());
         }
 
     }

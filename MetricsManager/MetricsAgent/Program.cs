@@ -36,8 +36,8 @@ namespace MetricsAgent
                         })
         .ConfigureLogging(logging =>
         {
-            logging.ClearProviders(); // Создание провайдеров логирования
+            logging.ClearProviders();                // Создание провайдеров логирования
             logging.SetMinimumLevel(LogLevel.Trace); // Устанавливаем минимальный уровень логирования
-        }).UseNLog(); // Добавляем библиотеку nlog
+        }).UseNLog();                                // Добавляем библиотеку nlog
     }
 }
