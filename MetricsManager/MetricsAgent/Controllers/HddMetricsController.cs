@@ -6,6 +6,7 @@ using MetricsAgent.DAL.Repository;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Request;
 using MetricsAgent.DAL.Responses;
+using AutoMapper;
 
 namespace MetricsAgent.Controllers
 {
@@ -15,11 +16,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<HddMetricsController> _logger;
         private IHddMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository)
+        public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
             _logger.LogDebug(3, "NLog встроен в MetricsAgent.HddMetricsController");
         }
 
@@ -49,12 +52,7 @@ namespace MetricsAgent.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new HddMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
+                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
             }
 
             return Ok(response);

@@ -6,7 +6,7 @@ using MetricsAgent.DAL.Repository;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Request;
 using MetricsAgent.DAL.Responses;
-
+using AutoMapper;
 
 namespace MetricsAgent.Controllers
 {
@@ -16,11 +16,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<CpuMetricsController> _logger;
         private ICpuMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository)
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
             _logger.LogDebug(1, "NLog встроен в MetricsAgent.CpuMetricsController");
         }
 
@@ -35,27 +37,7 @@ namespace MetricsAgent.Controllers
             });
             return Ok();
         }
- /*
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            var metrics = _repository.GetAll();
-            var response = new AllCpuMetricsResponse()
-            {
-                Metrics = new List<CpuMetricDto>()
-            };
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(new CpuMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
-            }
-            return Ok(response);
-        }
-*/
+
         [HttpPost("getbytimeperiod")]
         public IActionResult GetByTimePeriod([FromBody] CpuMetricGetByTimePeriodRequest request)
         {
@@ -71,12 +53,7 @@ namespace MetricsAgent.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new CpuMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
+                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
             }
 
             return Ok(response);
