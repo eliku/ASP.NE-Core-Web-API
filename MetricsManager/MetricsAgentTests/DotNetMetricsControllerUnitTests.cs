@@ -6,17 +6,22 @@ using Xunit;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Repository;
 using Moq;
+using AutoMapper;
+using MetricsAgent;
 
 namespace MetricsManagerTests
 {
     public class DotNetMetricsControllerUnitTests
     {
-        private DotNetMetricsController controller;
-        private Mock<IDotNetMetricsRepository> mock;
+        private readonly DotNetMetricsController controller;
+        private readonly Mock<IDotNetMetricsRepository> mock;
 
         public DotNetMetricsControllerUnitTests()
         {
-            controller = new DotNetMetricsController(new Mock<ILogger<DotNetMetricsController>>().Object, mock.Object);
+            var mapperConfiguration = new MapperConfiguration(mp => mp
+            .AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            controller = new DotNetMetricsController(new Mock<ILogger<DotNetMetricsController>>().Object, mock.Object, mapper);
         }
 
         [Fact]

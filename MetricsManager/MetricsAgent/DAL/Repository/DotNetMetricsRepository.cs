@@ -21,31 +21,27 @@ namespace MetricsAgent.DAL.Repository
 
         public void Create(DotNetMetric item)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using var connection = new SQLiteConnection(ConnectionString);
+            // Запрос на вставку данных с плейсхолдерами для параметров
+            connection.Execute("INSERT INTO dotnetmetrics(value, time) VALUES(@value, @time)",
+            // Анонимный объект с параметрами запроса
+            new
             {
-                // Запрос на вставку данных с плейсхолдерами для параметров
-                connection.Execute("INSERT INTO dotnetmetrics(value, time) VALUES(@value, @time)",
-                // Анонимный объект с параметрами запроса
-                new
-                {
                     // Value подставится на место "@value" в строке запроса
                     // Значение запишется из поля Value объекта item
                     value = item.Value,
                     // Записываем в поле time количество секунд
                     time = item.Time.TotalSeconds
-                });
-            }
+            });
         }
 
         public IList<DotNetMetric> GetByTimePeriod(TimeSpan fromTime, TimeSpan toTime)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
-            {
-                // Читаем, используя Query, и в шаблон подставляем тип данных,
-                // объект которого Dapper, он сам заполнит его поля
-                // в соответствии с названиями колонок
-                return connection.Query<DotNetMetric>("SELECT id, value, time FROM dotnetmetrics WHERE time BETWEEN @fromTime AND @toTime").ToList();
-            }
+            using var connection = new SQLiteConnection(ConnectionString);
+            // Читаем, используя Query, и в шаблон подставляем тип данных,
+            // объект которого Dapper, он сам заполнит его поля
+            // в соответствии с названиями колонок
+            return connection.Query<DotNetMetric>("SELECT id, value, time FROM dotnetmetrics WHERE time BETWEEN @fromTime AND @toTime").ToList();
         }
     }
 }

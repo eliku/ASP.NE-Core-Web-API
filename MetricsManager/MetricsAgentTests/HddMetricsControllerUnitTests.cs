@@ -6,17 +6,22 @@ using Xunit;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Repository;
 using Moq;
+using AutoMapper;
+using MetricsAgent;
 
 namespace MetricsManagerTests
 {
     public class HddMetricsControllerUnitTests
     {
-        private HddMetricsController controller;
-        private Mock<IHddMetricsRepository> mock;
+        private readonly HddMetricsController controller;
+        private readonly Mock<IHddMetricsRepository> mock;
 
         public HddMetricsControllerUnitTests()
         {
-            controller = new HddMetricsController(new Mock<ILogger<HddMetricsController>>().Object, mock.Object);
+            var mapperConfiguration = new MapperConfiguration(mp => mp
+            .AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            controller = new HddMetricsController(new Mock<ILogger<HddMetricsController>>().Object, mock.Object, mapper);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()

@@ -6,17 +6,24 @@ using Xunit;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Repository;
 using Moq;
+using AutoMapper;
+using MetricsAgent;
 
 namespace MetricsManagerTests
 {
     public class RamMetricsControllerUnitTests
     {
-        private RamMetricsController controller;
-        private Mock<IRamMetricsRepository> mock;
+        private readonly RamMetricsController controller;
+        private readonly Mock<IRamMetricsRepository> mock;
+
+
 
         public RamMetricsControllerUnitTests()
         {
-            controller = new RamMetricsController(new Mock<ILogger<RamMetricsController>>().Object, mock.Object);
+            var mapperConfiguration = new MapperConfiguration(mp => mp
+            .AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            controller = new RamMetricsController(new Mock<ILogger<RamMetricsController>>().Object, mock.Object, mapper);
         }
 
         [Fact]

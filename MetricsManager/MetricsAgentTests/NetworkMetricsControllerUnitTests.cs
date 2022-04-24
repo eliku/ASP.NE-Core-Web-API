@@ -6,17 +6,22 @@ using Xunit;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.DAL.Repository;
 using Moq;
+using AutoMapper;
+using MetricsAgent;
 
 namespace MetricsManagerTests
 {
     public class NetworkMetricsControllerUnitTests
     {
-        private NetworkMetricsController controller;
-        private Mock<INetworkMetricsRepository> mock;
+        private readonly NetworkMetricsController controller;
+        private readonly Mock<INetworkMetricsRepository> mock;
 
         public NetworkMetricsControllerUnitTests()
         {
-            controller = new NetworkMetricsController(new Mock<ILogger<NetworkMetricsController>>().Object, mock.Object);
+            var mapperConfiguration = new MapperConfiguration(mp => mp
+           .AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            controller = new NetworkMetricsController(new Mock<ILogger<NetworkMetricsController>>().Object, mock.Object, mapper);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()
