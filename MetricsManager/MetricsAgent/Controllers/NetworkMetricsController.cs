@@ -14,9 +14,9 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {
-        private readonly ILogger<NetworkMetricsController> _logger;
-        private readonly INetworkMetricsRepository _repository;
-        private readonly IMapper _mapper;
+        private ILogger<NetworkMetricsController> _logger;
+        private INetworkMetricsRepository _repository;
+        private IMapper _mapper;
 
         public NetworkMetricsController(ILogger<NetworkMetricsController> logger, INetworkMetricsRepository repository, IMapper mapper)
         {

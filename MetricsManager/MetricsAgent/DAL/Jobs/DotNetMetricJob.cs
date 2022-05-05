@@ -31,8 +31,7 @@ namespace MetricsAgent.DAL.Jobs
             _repository.Create(new Models.DotNetMetric
             {
                 Time = time,
-                Value =
-            dotNetUsageInPercents
+                Value = dotNetUsageInPercents,
             });
             return Task.CompletedTask;
         }

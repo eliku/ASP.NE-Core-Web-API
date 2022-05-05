@@ -30,8 +30,7 @@ namespace MetricsAgent.DAL.Jobs
             _repository.Create(new Models.NetworkMetric
             {
                 Time = time,
-                Value =
-            networkUsageInPercents
+                Value = networkUsageInPercents,
             });
             return Task.CompletedTask;
         }

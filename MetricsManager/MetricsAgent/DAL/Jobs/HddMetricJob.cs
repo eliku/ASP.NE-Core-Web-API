@@ -32,8 +32,7 @@ namespace MetricsAgent.DAL.Jobs
             _repository.Create(new Models.HddMetric
             {
                 Time = time,
-                Value =
-            hddUsageInPercents
+                Value = hddUsageInPercents,
             });
             return Task.CompletedTask;
         }

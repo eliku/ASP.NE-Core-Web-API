@@ -12,9 +12,9 @@ namespace MetricsAgent
 {
     public class QuartzHostedService:IHostedService
     {
-        private readonly ISchedulerFactory _schedulerFactory;
-        private readonly IJobFactory _jobFactory;
-        private readonly IEnumerable<JobSchedule> _jobSchedules;
+        private ISchedulerFactory _schedulerFactory;
+        private IJobFactory _jobFactory;
+        private IEnumerable<JobSchedule> _jobSchedules;
         public QuartzHostedService(
         ISchedulerFactory schedulerFactory,
         IJobFactory jobFactory,

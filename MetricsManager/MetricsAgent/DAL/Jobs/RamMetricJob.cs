@@ -25,8 +25,7 @@ namespace MetricsAgent.DAL.Jobs
             _repository.Create(new Models.RamMetric
             {
                 Time = time,
-                Value =
-            ramUsageInPercents
+                Value = ramUsageInPercents,
             });
             return Task.CompletedTask;
         }

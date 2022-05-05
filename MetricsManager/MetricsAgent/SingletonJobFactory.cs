@@ -7,7 +7,7 @@ namespace MetricsAgent
 {
     public class SingletonJobFactory:IJobFactory
     {
-        private readonly IServiceProvider _serviceProvider;
+        private  IServiceProvider _serviceProvider;
         public SingletonJobFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;

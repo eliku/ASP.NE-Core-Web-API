@@ -31,8 +31,7 @@ namespace MetricsAgent.DAL.Jobs
             _repository.Create(new Models.CpuMetric
             {
                 Time = time,
-                Value =
-            cpuUsageInPercents
+                Value = cpuUsageInPercents,
             });
             return Task.CompletedTask;
         }

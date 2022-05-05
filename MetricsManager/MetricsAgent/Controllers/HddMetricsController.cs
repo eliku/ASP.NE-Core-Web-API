@@ -14,9 +14,9 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
-        private readonly ILogger<HddMetricsController> _logger;
-        private readonly IHddMetricsRepository _repository;
-        private readonly IMapper _mapper;
+        private  ILogger<HddMetricsController> _logger;
+        private  IHddMetricsRepository _repository;
+        private  IMapper _mapper;
 
         public HddMetricsController(ILogger<HddMetricsController> logger, IHddMetricsRepository repository, IMapper mapper)
         {

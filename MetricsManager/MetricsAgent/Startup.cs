@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+п»їusing Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using MetricsAgent.DAL.Repository;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +11,7 @@ using MetricsAgent.DAL.Jobs;
 using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
+using MetricsAgent.DAL;
 
 namespace MetricsAgent
 {
@@ -22,78 +23,90 @@ namespace MetricsAgent
         }
 
         public IConfiguration Configuration { get; }
-        private const string ConnectionString = @"Data Source=metrics.db; Version=3;";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddJsonOptions(options =>
             options.JsonSerializerOptions.Converters.Add(new TimeSpanToStringConverter()));
+            services.AddSingleton<IConnectionManager, ConnectionManager>();
 
             services.AddFluentMigratorCore().ConfigureRunner(rb => rb
-            // Добавляем поддержку SQLite
+            // Р”РѕР±Р°РІР»СЏРµРј РїРѕРґРґРµСЂР¶РєСѓ SQLite
             .AddSQLite()
-            // Устанавливаем строку подключения
-            .WithGlobalConnectionString(ConnectionString)
-            // Подсказываем, где искать классы с миграциями
+            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃС‚СЂРѕРєСѓ РїРѕРґРєР»СЋС‡РµРЅРёСЏ
+            .WithGlobalConnectionString(ConnectionManager.ConnectionString)
+            // РџРѕРґСЃРєР°Р·С‹РІР°РµРј, РіРґРµ РёСЃРєР°С‚СЊ РєР»Р°СЃСЃС‹ СЃ РјРёРіСЂР°С†РёСЏРјРё
             .ScanIn(typeof(Startup).Assembly).For.Migrations()).AddLogging(lb => lb.AddFluentMigratorConsole());
             
-            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
-            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
-            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
-            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
-            services.AddScoped<IRamMetricsRepository,RamMetricsRepository>();
+            services.AddTransient<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddTransient<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddTransient<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddTransient<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddTransient<IRamMetricsRepository,RamMetricsRepository>();
 
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddHostedService<QuartzHostedService>();
-
-            // Добавляем сервисы
+            // Р”РѕР±Р°РІР»СЏРµРј СЃРµСЂРІРёСЃС‹
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            // Добавляем нашу задачу
+            // Р”РѕР±Р°РІР»СЏРµРј РЅР°С€Сѓ Р·Р°РґР°С‡Сѓ
             services.AddSingleton<CpuMetricJob>();
             services.AddSingleton(new JobSchedule(
             jobType: typeof(CpuMetricJob),
-            cronExpression: "0/5 * * * * ?")); // Запускать каждые 5 секунд
+            cronExpression: "0/5 * * * * ?")); // Р—Р°РїСѓСЃРєР°С‚СЊ РєР°Р¶РґС‹Рµ 5 СЃРµРєСѓРЅРґ
 
             services.AddSingleton<DotNetMetricJob>();
             services.AddSingleton(new JobSchedule(
             jobType: typeof(DotNetMetricJob),
-            cronExpression: "0/5 * * * * ?")); // Запускать каждые 5 секунд
+            cronExpression: "0/5 * * * * ?")); // Р—Р°РїСѓСЃРєР°С‚СЊ РєР°Р¶РґС‹Рµ 5 СЃРµРєСѓРЅРґ
 
             services.AddSingleton<HddMetricJob>();
             services.AddSingleton(new JobSchedule(
             jobType: typeof(HddMetricJob),
-            cronExpression: "0/5 * * * * ?")); // Запускать каждые 5 секунд
+            cronExpression: "0/5 * * * * ?")); // Р—Р°РїСѓСЃРєР°С‚СЊ РєР°Р¶РґС‹Рµ 5 СЃРµРєСѓРЅРґ
 
             services.AddSingleton<NetworkMetricJob>();
             services.AddSingleton(new JobSchedule(
             jobType: typeof(NetworkMetricJob),
-            cronExpression: "0/5 * * * * ?")); // Запускать каждые 5 секунд
+            cronExpression: "0/5 * * * * ?")); // Р—Р°РїСѓСЃРєР°С‚СЊ РєР°Р¶РґС‹Рµ 5 СЃРµРєСѓРЅРґ
 
             services.AddSingleton<RamMetricJob>();
             services.AddSingleton(new JobSchedule(
             jobType: typeof(RamMetricJob),
-            cronExpression: "0/5 * * * * ?"));// Запускать каждые 5 секунд
+            cronExpression: "0/5 * * * * ?"));// Р—Р°РїСѓСЃРєР°С‚СЊ РєР°Р¶РґС‹Рµ 5 СЃРµРєСѓРЅРґ
+
+            services.AddSingleton<CpuMetricJob>();
+            services.AddSingleton<DotNetMetricJob>();
+            services.AddSingleton<HddMetricJob>();
+            services.AddSingleton<NetworkMetricJob>();
+            services.AddSingleton<RamMetricJob>();
+
+            services.AddSingleton<QuartzHostedService>();
+            services.AddHttpClient();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            // Р—Р°РїСѓСЃРєР°РµРј РјРёРіСЂР°С†РёРё
+
+            migrationRunner.MigrateDown(1);
+            migrationRunner.MigrateUp();
         }
 
     }

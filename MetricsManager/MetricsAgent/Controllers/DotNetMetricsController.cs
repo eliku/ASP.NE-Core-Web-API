@@ -14,9 +14,9 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class DotNetMetricsController : ControllerBase
     {
-        private readonly ILogger<DotNetMetricsController> _logger;
-        private readonly IDotNetMetricsRepository _repository;
-        private readonly IMapper _mapper;
+        private  ILogger<DotNetMetricsController> _logger;
+        private  IDotNetMetricsRepository _repository;
+        private  IMapper _mapper;
 
         public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository repository, IMapper mapper)
         {
