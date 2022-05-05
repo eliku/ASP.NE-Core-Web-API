@@ -85,7 +85,6 @@ namespace MetricsAgent
             services.AddSingleton<RamMetricJob>();
 
             services.AddSingleton<QuartzHostedService>();
-            services.AddHttpClient();
 
         }
 
