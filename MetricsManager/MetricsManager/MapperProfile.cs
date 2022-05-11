@@ -10,15 +10,15 @@ namespace MetricsManager
         {
             CreateMap<AgentInfo, AgentsResponse>();
 
-            CreateMap<CpuMetric, AllCpuMetricsResponse>();
+            CreateMap<CpuMetric, AllCpuMetricsApiResponse>();
 
-            CreateMap<DotNetMetric, AllDotNetMetricsResponse>();
+            CreateMap<DotNetMetric, AllDotNetMetricsApiResponse>();
 
-            CreateMap<HddMetric, AllHddMetricsResponse>();
+            CreateMap<HddMetric, AllHddMetricsApiResponse>();
 
-            CreateMap<NetworkMetric, AllNetworkMetricsResponse>();
+            CreateMap<NetworkMetric, AllNetworkMetricsApiResponse>();
 
-            CreateMap<RamMetric, AllRamMetricsResponse>();
+            CreateMap<RamMetric, AllRamMetricsApiResponse>();
         }
     }
 }
